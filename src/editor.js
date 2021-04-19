@@ -276,9 +276,17 @@ function createHTML(options = {}) {
             fontName: { result: function(name) { return exec('fontName', name); }},
 
             _color: { custom: true, name: 'color', state: function() { return queryCommandValue('foreColor'); }, result: function(color) { return exec('_color', color); }},
-            _family: { custom: true, name: 'family', isFontFamily: true, state: function() { return queryCommandValue('fontName'); }, result: function(fontName) { return exec('_family', fontName); }},
-            _weight: { custom: true, name: 'weight', isFontFamily: true, state: function() { return queryCommandValue('bold') ? 'bold' : false; }, result: function() { return exec('_weight'); }},
-            _italic: { custom: true, name: 'italic', isFontFamily: true, state: function() { return JSON.parse(queryCommandValue('italic')); }, result: function() { return exec('_italic'); }},
+            _family: {
+                custom: true,
+                name: 'fontFamily',
+                state: function() {
+                    return queryCommandValue('fontName');
+                },
+                result: function(fontName) {
+                    return exec('_family', fontName);
+                }},
+            _weight: { custom: true, name: 'weight', state: function() { return queryCommandValue('bold') ? 'bold' : false; }, result: function() { return exec('_weight'); }},
+            _italic: { custom: true, name: 'italic', state: function() { return JSON.parse(queryCommandValue('italic')); }, result: function() { return exec('_italic'); }},
             _fontSize: {
                 custom: true,
                 name: 'fontSize',
@@ -443,7 +451,7 @@ function createHTML(options = {}) {
                 for(var k in actionsHandler){
                     if ( Actions[k].state() ){
                         if ( Actions[k].custom ){
-                          activeTools.push({name: Actions[k].name, value: Actions[k].state(),  isFontFamily:  Actions[k].isFontFamily});
+                          activeTools.push({name: Actions[k].name, value: Actions[k].state()});
                         } else {
                             activeTools.push(k)
                         }
