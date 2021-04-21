@@ -50,11 +50,15 @@ function createHTML(options = {}) {
         [placeholder]:empty:before { content: attr(placeholder); color: ${placeholderColor};}
         [placeholder]:empty:focus:before { content: attr(placeholder);color: ${placeholderColor};}
     </style>
-    ${getContentCSS()}
-    <style>${cssText}</style>
+        ${getContentCSS()}
+    <style>
+        ${cssText}
+    </style>
 </head>
 <body>
-<div class="content"><div id="editor" class="pell"></div></div>
+    <div class="content">
+        <div id="editor" class="pell"></div>
+    </div>
 <script>
     var __DEV__ = !!${window.__DEV__};
     var _ = (function (exports) {
@@ -275,6 +279,7 @@ function createHTML(options = {}) {
             fontSize: { result: function(size) { return exec('fontSize', size); }},
             fontName: { result: function(name) { return exec('fontName', name); }},
 
+            _backgroundColor: { custom: true, name: 'backgroundColor', state: function() { return queryCommandState('hiliteColor'); }, result: function(color) { return exec('_backgroundColor', color); }},
             _color: { custom: true, name: 'color', state: function() { return queryCommandValue('foreColor'); }, result: function(color) { return exec('_color', color); }},
             _family: {
                 custom: true,
