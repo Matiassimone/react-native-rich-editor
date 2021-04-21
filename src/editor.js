@@ -59,7 +59,8 @@ function createHTML(options = {}) {
     <div class="content">
         <div id="editor" class="pell"></div>
     </div>
-<script>
+
+<script src="https://unpkg.com/turndown/dist/turndown.js">
     var __DEV__ = !!${window.__DEV__};
     var _ = (function (exports) {
         var anchorNode, focusNode, anchorOffset, focusOffset, _focusCollapse = false, cNode;
@@ -578,7 +579,9 @@ function createHTML(options = {}) {
                 clearTimeout(_handleCTime);
                 _handleCTime = setTimeout(function(){
                     var html = Actions.content.getHtml();
-                    postAction({type: 'CONTENT_CHANGE', data: html});
+                    var parsedHtml = turndownService.turndown(html)
+
+                    postAction({type: 'CONTENT_CHANGE', data: parsedHtml});
                 }, 50);
             }
         })

@@ -4,8 +4,6 @@ import {actions, messages} from './const';
 import {Dimensions, Keyboard, Platform, StyleSheet, TextInput, View} from 'react-native';
 import {createHTML} from './editor';
 
-import TurndownService from 'turndown';
-
 const PlatformIOS = Platform.OS === 'ios';
 
 export default class RichTextEditor extends Component {
@@ -88,8 +86,6 @@ export default class RichTextEditor extends Component {
     }
 
     componentDidMount() {
-        this.turndownService = new TurndownService();
-
         if (PlatformIOS) {
             this.keyboardEventListeners = [
                 Keyboard.addListener('keyboardWillShow', this._onKeyboardWillShow),
@@ -173,8 +169,7 @@ export default class RichTextEditor extends Component {
                     break;
                 }
                 case messages.CONTENT_CHANGE: {
-                    const parsedMarkdown = this.turndownService.turndown(data);
-                    props.onChange && props.onChange(parsedMarkdown);
+                    props.onChange && props.onChange(data);
                     break;
                 }
                 case messages.CONTENT_PASTED: {
