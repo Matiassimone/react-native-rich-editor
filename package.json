@@ -15,6 +15,7 @@
   "devDependencies": {},
   "peerDependencies": {
     "react-native": "0.64.0",
-    "react-native-webview": "11.4.0"
+    "react-native-webview": "11.4.0",
+    "turndown": "7.0.0"
   }
 }
