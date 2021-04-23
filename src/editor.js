@@ -432,9 +432,9 @@ function createHTML(options = {}) {
             content.oninput = function (_ref) {
 
                 // Rules Markdown Regex expressions.
-                let numberedListRegex = /^[0-9]+[)]+\&nbsp;$/
+                let numberedListRegex = /^[0-9]+[)|.]+\&nbsp;$/
                 let bulletListRegex = /^[*|-]+\&nbsp;$/
-                let numberedSur = /^[0-9]+[)]$/
+                let numberedSur = /^[0-9]+[)|.]$/
                 let bulletSur = /^[*|-]$/
 
                 // Find lasted HTML Node.
