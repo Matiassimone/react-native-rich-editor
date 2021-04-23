@@ -430,7 +430,39 @@ function createHTML(options = {}) {
             content.autocomplete = 'off';
             content.className = "pell-content";
             content.oninput = function (_ref) {
-                // var firstChild = _ref.target.firstChild;
+
+                // Rules Markdown Regex expressions.
+                let numberedListRegex = /^[0-9]+[)]+\&nbsp;$/
+                let bulletListRegex = /^[*|-]+\&nbsp;$/
+                let numberedSur = /^[0-9]+[)]$/
+                let bulletSur = /^[*|-]$/
+
+                // Find lasted HTML Node.
+                let lastedChild = _ref.target.lastChild;
+                while (lastedChild.hasChildNodes() && lastedChild.lastChild.innerHTML) {
+                    lastedChild = lastedChild.lastChild;
+                }
+                let lastedChildInnerContent = lastedChild.innerHTML;
+
+                // Remove remaining character.
+                if(lastedChild.tagName === 'LI'){
+                    let lastedChildText = lastedChild.textContent;
+                    let lastedCharacter = lastedChildText[0];
+                    let lastedTwoCharacters = lastedCharacter + lastedChildText[1];
+
+                    if(numberedSur.test(lastedTwoCharacters) || bulletSur.test(lastedCharacter)) {
+                        lastedChild.textContent = '';
+                    }
+                }
+
+                // Fire action in case match any markdown rule.
+                if(bulletListRegex.test(lastedChildInnerContent)) {
+                    Actions['unorderedList'].result();
+                }
+                if(numberedListRegex.test(lastedChildInnerContent)) {
+                    Actions['orderedList'].result();
+                }
+
                 if ((anchorNode === void 0 || anchorNode === content) && queryCommandValue(formatBlock) === ''){
                     formatParagraph(true);
                 } else if (content.innerHTML === '<br>') content.innerHTML = '';
