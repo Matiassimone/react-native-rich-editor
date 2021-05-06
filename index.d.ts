@@ -92,6 +92,11 @@ export interface RichEditorProps extends WebViewProps {
     onFocus?: () => void;
 
     /**
+     * Callback when the editor lost focus
+     */
+    onLostFocus?: () => void;
+
+    /**
      * Callback when the editor blur some content
      */
     onBlur?: () => void;
