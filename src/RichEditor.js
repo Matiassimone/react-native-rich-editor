@@ -100,6 +100,7 @@ export default class RichTextEditor extends Component {
     }
 
     componentWillUnmount() {
+        props.onLostFocus && props.onLostFocus();
         this.keyboardEventListeners.forEach((eventListener) => eventListener.remove());
     }
 
