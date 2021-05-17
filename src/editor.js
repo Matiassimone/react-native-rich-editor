@@ -592,13 +592,22 @@ function createHTML(options = {}) {
                 // get text representation of clipboard
                 var text = (e.originalEvent || e).clipboardData.getData('text/plain');
 
-                ${pasteListener} && postAction({type: 'CONTENT_PASTED', data: text});
-                if (${pasteAsPlainText}) {
-                    // cancel paste
-                    e.preventDefault();
-                    // insert text manually
-                    exec("insertText", text);
-                }
+                /*
+                  This piece of code allows you to paste text with all styles uncomment if your code
+                  supports fonts family and others styles when you paste text.
+
+
+                  ${pasteListener} && postAction({type: 'CONTENT_PASTED', data: text});
+
+                  if (${pasteAsPlainText}) {
+                      insert here the code bellow...
+                  }
+                */
+
+                // cancel paste
+                e.preventDefault();
+                // insert text manually
+                exec("insertText", text);
             });
 
             var message = function (event){
