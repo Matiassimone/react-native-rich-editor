@@ -275,7 +275,30 @@ function createHTML(options = {}) {
             justifyRight: { state: function() { return queryCommandState('justifyRight'); }, result: function() { return exec('justifyRight'); }},
             justifyFull: { state: function() { return queryCommandState('justifyFull'); }, result: function() { return exec('justifyFull'); }},
             hiliteColor: {  state: function() { return queryCommandState('hiliteColor'); }, result: function(color) { return exec('hiliteColor', color); }},
-            foreColor: { state: function() { return queryCommandState('foreColor'); }, result: function(color) { return exec('foreColor', color); }},
+
+            foreColor:
+            {
+              state: function() {
+                document.execCommand('foreColor', false);
+                for (const font of document.querySelectorAll("font")) {
+                    const span = document.createElement("span");
+                    const color = font.getAttribute("color");
+                    if (color) {
+                        span.style.color = color;
+                    }
+                    while (font.firstChild) {
+                        span.appendChild(font.firstChild);
+                    }
+                    font.parentNode.insertBefore(span, font);
+                    font.parentNode.removeChild(font);
+                    return font;
+                }
+              },
+              result: function(color) {
+                return exec('foreColor', color);
+              }
+            },
+
             fontSize: { result: function(size) { return exec('fontSize', size); }},
             fontName: { result: function(name) { return exec('fontName', name); }},
 
