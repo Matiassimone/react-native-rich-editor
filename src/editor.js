@@ -486,7 +486,8 @@ function createHTML(options = {}) {
                     Actions['orderedList'].result();
                 }
 
-                if ((anchorNode === void 0 || anchorNode === content) && queryCommandValue(formatBlock) === ''){
+
+                if ((anchorNode === void 0 || anchorNode === content) && (queryCommandValue(formatBlock) === '') && !lastedChildInnerContent){
                     formatParagraph(true);
                 } else if (content.innerHTML === '<br>') content.innerHTML = '';
 
