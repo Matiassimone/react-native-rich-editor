@@ -319,7 +319,7 @@ function createHTML(options = {}) {
                 custom: true,
                 name: 'fontSize',
                 state: function() {
-                    var el = document.getElementById('editor');
+                    var el = document.getElementById('content');
                     var style = window.getComputedStyle(el, null).getPropertyValue('font-size');
                     var fontSize = parseFloat(style);
                     return JSON.parse(fontSize);
