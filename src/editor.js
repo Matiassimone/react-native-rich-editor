@@ -3,6 +3,8 @@ function getContentCSS() {
     return `
     <style>
         video {max-width: 98%;margin-left:auto;margin-right:auto;display: block;}
+        ul {position: relative; right: -20px;}
+        ol {position: relative; right: -25px;}
         img {max-width: 98%;vertical-align: middle;}
         table {width: 100% !important;}
         table td {width: inherit;}
@@ -15,9 +17,9 @@ function getContentCSS() {
         pre{padding: 10px 5px 10px 10px;margin: 15px 0;display: block;line-height: 18px;background: #F0F0F0;border-radius: 3px;font-size: 13px; font-family: 'monaco', 'Consolas', "Liberation Mono", Courier, monospace; white-space: pre; word-wrap: normal;overflow-x: auto;}
     </style>
     `;
-}
+  }
 
-function createHTML(options = {}) {
+  function createHTML(options = {}) {
     const {
         backgroundColor = '#FFF',
         color = '#000033',
@@ -35,16 +37,19 @@ function createHTML(options = {}) {
     } = options;
     //ERROR: HTML height not 100%;
     return `
-<!DOCTYPE html>
-<html>
-<head>
+  <!DOCTYPE html>
+  <html>
+  <head>
     <meta name="viewport" content="user-scalable=1.0,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
     <style>
         * {outline: 0px solid transparent;-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-touch-callout: none;box-sizing: border-box;}
+
         html, body { margin: 0; padding: 0;font-family: Arial, Helvetica, sans-serif; font-size:1em;}
         body { overflow-y: hidden; -webkit-overflow-scrolling: touch;height: 100%;background-color: ${backgroundColor};}
+
         .content {font-family: Arial, Helvetica, sans-serif;color: ${color}; width: 100%;height: 100%;-webkit-overflow-scrolling: touch;padding-left: 0;padding-right: 0;}
-        .pell { height: 100%;} .pell-content { outline: 0; overflow-y: auto;padding: 10px;height: 100%;${contentCSSText}}
+        .pell { height: 100%;}
+        .pell-content { outline: 0; overflow-y: auto;padding: 10px;height: 100%;${contentCSSText}}
     </style>
     <style>
         [placeholder]:empty:before { content: attr(placeholder); color: ${placeholderColor};}
@@ -54,12 +59,12 @@ function createHTML(options = {}) {
     <style>
         ${cssText}
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="content">
         <div id="editor" class="pell"></div>
     </div>
-<script>
+  <script>
     var __DEV__ = !!${window.__DEV__};
     var _ = (function (exports) {
         var anchorNode, focusNode, anchorOffset, focusOffset, _focusCollapse = false, cNode;
@@ -674,11 +679,11 @@ function createHTML(options = {}) {
         isRN: !!window.ReactNativeWebView ,
         document: document
     });
-</script>
-</body>
-</html>
-`;
-}
+  </script>
+  </body>
+  </html>
+  `;
+  }
 
-const HTML = createHTML();
-export {HTML, createHTML, getContentCSS};
+  const HTML = createHTML();
+  export {HTML, createHTML, getContentCSS};
