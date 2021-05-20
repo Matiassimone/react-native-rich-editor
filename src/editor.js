@@ -276,8 +276,7 @@ function createHTML(options = {}) {
             justifyFull: { state: function() { return queryCommandState('justifyFull'); }, result: function() { return exec('justifyFull'); }},
             hiliteColor: {  state: function() { return queryCommandState('hiliteColor'); }, result: function(color) { return exec('hiliteColor', color); }},
 
-            foreColor:
-            {
+            foreColor: {
               state: function() {
                 document.execCommand('foreColor', false);
                 for (const font of document.querySelectorAll("font")) {
@@ -333,6 +332,19 @@ function createHTML(options = {}) {
             _justifyRight: { custom: true, name: 'textAlign', state: function() { return queryCommandState('justifyRight') ? 'right' : false; }, result: function() { return exec('_justifyRight'); }},
             _justifyFull: { custom: true, name: 'textAlign', state: function() { return queryCommandState('justifyFull') ? 'justify' : false; }, result: function() { return exec('_justifyFull'); }},
             _underline: { custom: true, name: 'underline', state: function() { return JSON.parse(queryCommandValue('underline')); }, result: function() { return exec('_underline'); }},
+            _caretPos: {
+              custom: true,
+              name: 'caretPos',
+              state: function() {
+                  var selection = window.getSelection();
+                  var range = selection.getRangeAt(0);
+                  var rect = range.getClientRects()[0];
+
+                  return rect;
+              },
+              result: function() {
+                return exec('_caretPos');
+            }},
 
             link: {
                 result: function(data) {
@@ -568,6 +580,7 @@ function createHTML(options = {}) {
             }
             function handleFocus (){
                 postAction({type: 'CONTENT_FOCUSED'});
+                handler();
             }
             function handleBlur (){
                 postAction({type: 'SELECTION_CHANGE', data: []});
