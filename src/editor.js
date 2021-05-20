@@ -247,10 +247,48 @@ function getContentCSS() {
         }
 
         var Actions = {
-            bold: { state: function() { return queryCommandState('bold'); }, result: function() { return exec('bold'); }},
-            italic: { state: function() { return queryCommandState('italic'); }, result: function() { return exec('italic'); }},
-            underline: { state: function() { return queryCommandState('underline'); }, result: function() { return exec('underline'); }},
-            strikeThrough: { state: function() { return queryCommandState('strikeThrough'); }, result: function() { return exec('strikeThrough'); }},
+            bold: {
+              name: 'bold',
+              dispacherCommand: true,
+              result: function() {
+                document.execCommand('bold');
+              },
+            },
+
+            italic: {
+              name: 'italic',
+              dispacherCommand: true,
+              result: function() {
+                document.execCommand('italic');
+              },
+            },
+
+            underline: {
+              name: 'underline',
+              dispacherCommand: true,
+              result: function() {
+                document.execCommand('underline');
+              },
+            },
+
+            strikeThrough: {
+              name: 'strikeThrough',
+              dispacherCommand: true,
+              result: function() {
+                document.execCommand('strikeThrough')
+
+                for (const strike of document.querySelectorAll("strike")) {
+                  const s = document.createElement("s");
+
+                  while (strike.firstChild) {
+                      s.appendChild(strike.firstChild);
+                  }
+                  strike.parentNode.insertBefore(s , strike);
+                  strike.parentNode.removeChild(strike);
+                }
+              }
+            },
+
             heading1: { state: function() { return queryCommandValue(formatBlock) === 'h1'; }, result: function() { return exec(formatBlock, '<h1>'); }},
             heading2: { state: function() { return queryCommandValue(formatBlock) === 'h2'; }, result: function() { return exec(formatBlock, '<h2>'); }},
             heading3: { state: function() { return queryCommandValue(formatBlock) === 'h3'; }, result: function() { return exec(formatBlock, '<h3>'); }},
@@ -309,34 +347,77 @@ function getContentCSS() {
             _backgroundColor: { custom: true, name: 'backgroundColor', state: function() { return queryCommandState('hiliteColor'); }, result: function(color) { return exec('_backgroundColor', color); }},
             _color: { custom: true, name: 'color', state: function() { return queryCommandValue('foreColor'); }, result: function(color) { return exec('_color', color); }},
             _family: {
-                custom: true,
-                name: 'fontFamily',
-                state: function() {
-                    return queryCommandValue('fontName');
-                },
-                result: function(fontName) {
-                    return exec('_family', fontName);
-                }},
-            _weight: { custom: true, name: 'weight', state: function() { return queryCommandValue('bold') ? 'bold' : false; }, result: function() { return exec('_weight'); }},
-            _italic: { custom: true, name: 'italic', state: function() { return JSON.parse(queryCommandValue('italic')); }, result: function() { return exec('_italic'); }},
+              custom: true,
+              name: 'fontFamily',
+              state: function() {
+                  return queryCommandValue('fontName');
+              },
+              result: function(fontName) {
+                  return exec('_family', fontName);
+              }
+            },
+
             _fontSize: {
-                custom: true,
-                name: 'fontSize',
-                state: function() {
-                    var el = document.getElementById('content');
-                    var style = window.getComputedStyle(el, null).getPropertyValue('font-size');
-                    var fontSize = parseFloat(style);
-                    return JSON.parse(fontSize);
-                },
-                result: function(size) {
-                    return exec('_fontSize', size);
-                }},
-            _strike: { custom: true, name: 'strike', state: function() { return JSON.parse(queryCommandValue('strikeThrough')); }, result: function() { return exec('_strike'); }},
+              custom: true,
+              name: 'fontSize',
+              state: function() {
+                var el = document.getElementById('content');
+                var style = window.getComputedStyle(el, null).getPropertyValue('font-size');
+                var fontSize = parseFloat(style);
+                return JSON.parse(fontSize);
+              },
+              result: function(size) {
+                return exec('_fontSize', size);
+              }
+            },
+
+            _weight: {
+              custom: true,
+              name: 'weight',
+              state: function() {
+                return queryCommandState('bold');
+              },
+              result: function() {
+                return exec('_weight');
+              }
+            },
+            _italic: {
+              custom: true,
+              name: 'italic',
+              state: function() {
+                return queryCommandState('italic');
+              },
+              result: function() {
+                return exec('_italic');
+              }
+            },
+            _strike: {
+              custom: true,
+              name: 'strike',
+              state: function() {
+                return queryCommandState('strikeThrough');
+              },
+              result: function() {
+                return exec('_strike');
+              }
+            },
+            _underline: {
+              custom: true,
+              name: 'underline',
+              state: function() {
+                return JSON.parse(queryCommandState('underline'));
+              },
+              result: function() {
+                return exec('_underline');
+              }
+            },
+
+
             _justifyCenter: { custom: true, name: 'textAlign', state: function() { return queryCommandState('justifyCenter') ? 'center' : false; }, result: function() { return exec('_justifyCenter'); }},
             _justifyLeft: { custom: true, name: 'textAlign', state: function() { return queryCommandState('justifyLeft') ? 'left' : false; }, result: function() { return exec('_justifyLeft'); }},
             _justifyRight: { custom: true, name: 'textAlign', state: function() { return queryCommandState('justifyRight') ? 'right' : false; }, result: function() { return exec('_justifyRight'); }},
             _justifyFull: { custom: true, name: 'textAlign', state: function() { return queryCommandState('justifyFull') ? 'justify' : false; }, result: function() { return exec('_justifyFull'); }},
-            _underline: { custom: true, name: 'underline', state: function() { return JSON.parse(queryCommandValue('underline')); }, result: function() { return exec('_underline'); }},
+
             _caretPos: {
               custom: true,
               name: 'caretPos',
@@ -527,12 +608,18 @@ function getContentCSS() {
             function handler() {
                 var activeTools = [];
                 for(var k in actionsHandler){
-                    if ( Actions[k].state() ){
-                        if ( Actions[k].custom ){
-                          activeTools.push({name: Actions[k].name, value: Actions[k].state()});
-                        } else {
-                            activeTools.push(k)
+
+                    if ( !Actions[k].dispacherCommand ){
+                        let state = Actions[k].state();
+
+                        if ( state ) {
+                          if ( Actions[k].custom ){
+                              activeTools.push({name: Actions[k].name, value: state});
+                          } else {
+                              activeTools.push(k)
+                          }
                         }
+
                     }
                 }
                 postAction({type: 'SELECTION_CHANGE', data: activeTools});
