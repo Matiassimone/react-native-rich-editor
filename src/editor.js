@@ -4,7 +4,7 @@ function getContentCSS() {
     <style>
         video {max-width: 98%;margin-left:auto;margin-right:auto;display: block;}
         ul {position: relative; left: 0.6em;}
-        ol {position: relative; left: 1.1em;}
+        ol {position: relative; left: 1.2em;}
         img {max-width: 98%;vertical-align: middle;}
         table {width: 100% !important;}
         table td {width: inherit;}
