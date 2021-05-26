@@ -3,8 +3,8 @@ function getContentCSS() {
     return `
     <style>
         video {max-width: 98%;margin-left:auto;margin-right:auto;display: block;}
-        ul {position: relative; right: -20px;}
-        ol {position: relative; right: -25px;}
+        ul {position: relative; left: 0.6em;}
+        ol {position: relative; left: 1.1em;}
         img {max-width: 98%;vertical-align: middle;}
         table {width: 100% !important;}
         table td {width: inherit;}
@@ -49,7 +49,7 @@ function getContentCSS() {
 
         .content {font-family: Arial, Helvetica, sans-serif;color: ${color}; width: 100%;height: 100%;-webkit-overflow-scrolling: touch;padding-left: 0;padding-right: 0;}
         .pell { height: 100%;}
-        .pell-content { outline: 0; overflow-y: auto;padding: 10px;height: 100%;${contentCSSText}}
+        .pell-content { outline: 0; overflow-y: auto; padding: 10px; height: 100%; margin-right: 0.8em; ${contentCSSText}}
     </style>
     <style>
         [placeholder]:empty:before { content: attr(placeholder); color: ${placeholderColor};}
