@@ -246,46 +246,202 @@ function getContentCSS() {
             }
         }
 
+        /* ******************************************************************
+        * Actions Guide
+        * *******************************************************************
+        *
+        * Custom = Set if you prefer parse the result into the Js response
+        *          with the following structure.
+        *
+        *          {name: "String", value: "Value"}
+        *
+        *
+        * Name = Name that appear in the Js response.
+        *
+        *
+        * State = Function called each time when a style is introduced or
+        *         when the position was changed.
+        *
+        *
+        * Result = Function called when is fired that action.
+        *
+        ****************************************************************** */
+
         var Actions = {
-            bold: {
-              name: 'bold',
-              dispacherCommand: true,
+            _caretPos: {
+              custom: true,
+              name: 'caretPos',
+              state: function() {
+                  var selection = window.getSelection();
+                  var range = selection.getRangeAt(0);
+                  var rect = range.getClientRects()[0];
+
+                  return rect;
+              },
               result: function() {
-                document.execCommand('bold');
+                return exec('_caretPos');
+            }},
+
+            bold: {
+              custom: true,
+              name: 'bold',
+              state: function() {
+                return queryCommandState('bold');
+              },
+              result: function() {
+                exec('bold');
               },
             },
 
             italic: {
+              custom: true,
               name: 'italic',
-              dispacherCommand: true,
+              state: function() {
+                return queryCommandState('italic');
+              },
               result: function() {
-                document.execCommand('italic');
+                return exec('italic');
               },
             },
 
             underline: {
+              custom: true,
               name: 'underline',
-              dispacherCommand: true,
+              state: function() {
+                return queryCommandState('underline');
+              },
               result: function() {
-                document.execCommand('underline');
+                exec('underline');
               },
             },
 
-            strikeThrough: {
-              name: 'strikeThrough',
-              dispacherCommand: true,
+            strike: {
+              custom: true,
+              name: 'strike',
+              state: function() {
+                return queryCommandState('strikeThrough');
+              },
               result: function() {
-                document.execCommand('strikeThrough')
+                exec('strikeThrough')
 
                 for (const strike of document.querySelectorAll("strike")) {
                   const s = document.createElement("s");
 
                   while (strike.firstChild) {
-                      s.appendChild(strike.firstChild);
+                    s.appendChild(strike.firstChild);
                   }
+
                   strike.parentNode.insertBefore(s , strike);
                   strike.parentNode.removeChild(strike);
                 }
+              }
+            },
+
+            color: {
+              custom: true,
+              name: 'color',
+              state: function() {
+                return document.queryCommandValue('foreColor');
+              },
+              result: function(color) {
+                exec('foreColor', color);
+
+                for (const font of document.querySelectorAll("font")) {
+                  const span = document.createElement("span");
+                  const color = font.getAttribute("color");
+
+                  if (color) {
+                    span.style.color = color;
+                  };
+
+                  while (font.firstChild) {
+                    span.appendChild(font.firstChild);
+                  };
+
+                  font.parentNode.insertBefore(span, font);
+                  font.parentNode.removeChild(font);
+                }
+              },
+            },
+
+            fontFamily: {
+              custom: true,
+              name: 'fontFamily',
+              state: function() {
+                  return queryCommandValue('fontName');
+              },
+              result: function(fontName) {
+                  return exec('fontName', fontName);
+              }
+            },
+
+            fontSize: {
+              custom: true,
+              name: 'fontSize',
+              state: function() {
+                var el = document.getElementById('content');
+                var style = window.getComputedStyle(el, null).getPropertyValue('font-size');
+                var fontSize = parseFloat(style);
+
+                return JSON.parse(fontSize);
+              },
+              result: function(size) {
+                return exec('fontSize', size);
+              },
+            },
+
+            backgroundColor: {
+              custom: true,
+              name: 'backgroundColor',
+              state: function() {
+                return queryCommandState('hiliteColor');
+              },
+              result: function(color) {
+                return exec('hiliteColor', color);
+              },
+            },
+
+            justifyCenter: {
+              custom: true,
+              name: 'textAlign',
+              state: function() {
+                return queryCommandState('justifyCenter') ? 'center' : false;
+              },
+              result: function() {
+                return exec('justifyCenter');
+              }
+            },
+
+            justifyLeft: {
+              custom: true,
+              name: 'textAlign',
+              state: function() {
+                return queryCommandState('justifyLeft') ? 'left' : false;
+              },
+              result: function() {
+                return exec('justifyLeft');
+              }
+            },
+
+            justifyRight: {
+              custom: true,
+              name: 'textAlign',
+              state: function() {
+                return queryCommandState('justifyRight') ? 'right' : false;
+              },
+              result: function() {
+                return exec('justifyRight');
+              }
+            },
+
+            justifyFull: {
+              custom: true,
+              name: 'textAlign',
+              state: function() {
+                return queryCommandState('justifyFull') ? 'justify' : false;
+              },
+              result: function() {
+                return exec('justifyFull');
               }
             },
 
@@ -313,124 +469,6 @@ function getContentCSS() {
             indent: { result: function() { return exec('indent'); }},
             outdent: { result: function() { return exec('outdent'); }},
             outdent: { result: function() { return exec('outdent'); }},
-            justifyCenter: {  state: function() { return queryCommandState('justifyCenter'); }, result: function() { return exec('justifyCenter'); }},
-            justifyLeft: { state: function() { return queryCommandState('justifyLeft'); }, result: function() { return exec('justifyLeft'); }},
-            justifyRight: { state: function() { return queryCommandState('justifyRight'); }, result: function() { return exec('justifyRight'); }},
-            justifyFull: { state: function() { return queryCommandState('justifyFull'); }, result: function() { return exec('justifyFull'); }},
-            hiliteColor: {  state: function() { return queryCommandState('hiliteColor'); }, result: function(color) { return exec('hiliteColor', color); }},
-
-            foreColor: {
-              state: function() {
-                document.execCommand('foreColor', false);
-                for (const font of document.querySelectorAll("font")) {
-                    const span = document.createElement("span");
-                    const color = font.getAttribute("color");
-                    if (color) {
-                        span.style.color = color;
-                    }
-                    while (font.firstChild) {
-                        span.appendChild(font.firstChild);
-                    }
-                    font.parentNode.insertBefore(span, font);
-                    font.parentNode.removeChild(font);
-                    return font;
-                }
-              },
-              result: function(color) {
-                return exec('foreColor', color);
-              }
-            },
-
-            fontSize: { result: function(size) { return exec('fontSize', size); }},
-            fontName: { result: function(name) { return exec('fontName', name); }},
-
-            _backgroundColor: { custom: true, name: 'backgroundColor', state: function() { return queryCommandState('hiliteColor'); }, result: function(color) { return exec('_backgroundColor', color); }},
-            _color: { custom: true, name: 'color', state: function() { return queryCommandValue('foreColor'); }, result: function(color) { return exec('_color', color); }},
-            _family: {
-              custom: true,
-              name: 'fontFamily',
-              state: function() {
-                  return queryCommandValue('fontName');
-              },
-              result: function(fontName) {
-                  return exec('_family', fontName);
-              }
-            },
-
-            _fontSize: {
-              custom: true,
-              name: 'fontSize',
-              state: function() {
-                var el = document.getElementById('content');
-                var style = window.getComputedStyle(el, null).getPropertyValue('font-size');
-                var fontSize = parseFloat(style);
-                return JSON.parse(fontSize);
-              },
-              result: function(size) {
-                return exec('_fontSize', size);
-              }
-            },
-
-            _weight: {
-              custom: true,
-              name: 'weight',
-              state: function() {
-                return queryCommandState('bold');
-              },
-              result: function() {
-                return exec('_weight');
-              }
-            },
-            _italic: {
-              custom: true,
-              name: 'italic',
-              state: function() {
-                return queryCommandState('italic');
-              },
-              result: function() {
-                return exec('_italic');
-              }
-            },
-            _strike: {
-              custom: true,
-              name: 'strike',
-              state: function() {
-                return queryCommandState('strikeThrough');
-              },
-              result: function() {
-                return exec('_strike');
-              }
-            },
-            _underline: {
-              custom: true,
-              name: 'underline',
-              state: function() {
-                return JSON.parse(queryCommandState('underline'));
-              },
-              result: function() {
-                return exec('_underline');
-              }
-            },
-
-
-            _justifyCenter: { custom: true, name: 'textAlign', state: function() { return queryCommandState('justifyCenter') ? 'center' : false; }, result: function() { return exec('_justifyCenter'); }},
-            _justifyLeft: { custom: true, name: 'textAlign', state: function() { return queryCommandState('justifyLeft') ? 'left' : false; }, result: function() { return exec('_justifyLeft'); }},
-            _justifyRight: { custom: true, name: 'textAlign', state: function() { return queryCommandState('justifyRight') ? 'right' : false; }, result: function() { return exec('_justifyRight'); }},
-            _justifyFull: { custom: true, name: 'textAlign', state: function() { return queryCommandState('justifyFull') ? 'justify' : false; }, result: function() { return exec('_justifyFull'); }},
-
-            _caretPos: {
-              custom: true,
-              name: 'caretPos',
-              state: function() {
-                  var selection = window.getSelection();
-                  var range = selection.getRangeAt(0);
-                  var rect = range.getClientRects()[0];
-
-                  return rect;
-              },
-              result: function() {
-                return exec('_caretPos');
-            }},
 
             link: {
                 result: function(data) {
@@ -605,24 +643,32 @@ function getContentCSS() {
                 }
             }
 
+            /* ******************************************************************
+            * handler()
+            * *******************************************************************
+            *
+            * Function called each time when a styles is updated or when the
+            * caret position was changed, to update the Reactive Menu.
+            *
+            ****************************************************************** */
+
             function handler() {
-                var activeTools = [];
-                for(var k in actionsHandler){
+              var activeTools = [];
 
-                    if ( !Actions[k].dispacherCommand ){
-                        let state = Actions[k].state();
+              for(var k in actionsHandler){
+                let state = Actions[k].state();
 
-                        if ( state ) {
-                          if ( Actions[k].custom ){
-                              activeTools.push({name: Actions[k].name, value: state});
-                          } else {
-                              activeTools.push(k)
-                          }
-                        }
+                if ( state ) {
+                  if ( Actions[k].custom ){
+                    activeTools.push({name: Actions[k].name, value: state});
 
-                    }
+                  } else {
+                    activeTools.push(k)
+                  }
                 }
-                postAction({type: 'SELECTION_CHANGE', data: activeTools});
+              };
+
+              postAction({type: 'SELECTION_CHANGE', data: activeTools});
             };
 
             var _handleStateDT = null;
