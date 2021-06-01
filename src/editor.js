@@ -414,11 +414,6 @@ function getContentCSS() {
               custom: true,
               name: 'color',
               state: function() {
-                return document.queryCommandValue('foreColor');
-              },
-              result: function(color) {
-                exec('foreColor', color);
-
                 for (const font of document.querySelectorAll("font")) {
                   const span = document.createElement("span");
                   const color = font.getAttribute("color");
@@ -434,6 +429,11 @@ function getContentCSS() {
                   font.parentNode.insertBefore(span, font);
                   font.parentNode.removeChild(font);
                 }
+
+                return document.queryCommandValue('foreColor');
+              },
+              result: function(color) {
+                exec('foreColor', color);
               },
             },
 
