@@ -1,10 +1,31 @@
 function getContentCSS() {
-    /*img {max-width: 98%;margin-left:auto;margin-right:auto;display: block;}*/
     return `
     <style>
+        li {
+          overflow: visible;
+          position: relative;
+          top: 0px;
+          margin-left: 1em;
+        }
+        ul {
+          list-style-position: outside;
+          overflow: visible;
+          position: relative;
+          padding: 0px;
+          margin: 0px;
+          top: 0px;
+          left: 0px;
+        }
+        ol {
+          list-style-position: outside;
+          overflow: visible;
+          position: relative;
+          padding: 0px;
+          margin: 0px;
+          top: 0px;
+          left: 0.8em;
+        }
         video {max-width: 98%;margin-left:auto;margin-right:auto;display: block;}
-        ul {position: relative; left: 0.6em;}
-        ol {position: relative; left: 1.2em;}
         img {max-width: 98%;vertical-align: middle;}
         table {width: 100% !important;}
         table td {width: inherit;}
@@ -44,26 +65,78 @@ function getContentCSS() {
     <style>
         * {outline: 0px solid transparent;-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-touch-callout: none;box-sizing: border-box;}
 
-        html, body { margin: 0; padding: 0;font-family: Arial, Helvetica, sans-serif; font-size:1em;}
-        body { overflow-y: hidden; -webkit-overflow-scrolling: touch;height: 100%;background-color: ${backgroundColor};}
+        html, body {
+          width: 100%;
+          height: 100%;
+          overflow: visible;
+          padding: 0px;
+          margin: 0px;
+          right: 0px,
+          top: 0px;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size:1em;
+        }
+        body {
+          width: 100%;
+          height: 100%;
+          overflow: visible;
+          padding: 0px;
+          margin: 0px;
+          right: 0px,
+          top: 0px;
+          background-color: ${backgroundColor};
+        }
 
-        .content {font-family: Arial, Helvetica, sans-serif;color: ${color}; width: 100%;height: 100%;-webkit-overflow-scrolling: touch;padding-left: 0;padding-right: 0;}
-        .pell { height: 100%;}
-        .pell-content { outline: 0; overflow-y: auto; padding: 10px; height: 100%; margin-right: 0.8em; ${contentCSSText}}
+        .content {
+          font-family: Arial, Helvetica, sans-serif;
+          color: ${color};
+          width: 100%;
+          height: 100%;
+          overflow: visible;
+          padding: 0px;
+          margin: 0px;
+          right: 0px,
+          top: 0px;
+        }
+        .pell {
+          width: 100%;
+          height: 100%;
+          overflow: visible;
+          padding: 0.1em;
+          margin: 0.1em;
+          right: 0px,
+          top: 0px;
+        }
+        .pell-content {
+          outline: 0;
+          width: 100%;
+          height: 100%;
+          overflow: visible;
+          padding: 0px;
+          margin: 0px;
+          right: 0px,
+          top: 0px;
+          margin-right: 0.8em;
+
+          ${contentCSSText}
+        }
     </style>
+
     <style>
-        [placeholder]:empty:before { content: attr(placeholder); color: ${placeholderColor};}
-        [placeholder]:empty:focus:before { content: attr(placeholder);color: ${placeholderColor};}
+        [placeholder]:empty:before { content: attr(placeholder); color: ${placeholderColor}; }
+        [placeholder]:empty:focus:before { content: attr(placeholder);color: ${placeholderColor}; }
     </style>
-        ${getContentCSS()}
+    ${getContentCSS()}
     <style>
         ${cssText}
     </style>
   </head>
+
   <body>
     <div class="content">
         <div id="editor" class="pell"></div>
     </div>
+
   <script>
     var __DEV__ = !!${window.__DEV__};
     var _ = (function (exports) {
