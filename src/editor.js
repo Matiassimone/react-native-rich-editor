@@ -643,7 +643,12 @@ function getContentCSS() {
             },
 
             UPDATE_HEIGHT: function() {
-                var height = Math.max(docEle.scrollHeight, body.scrollHeight);
+
+                // That make a infinity scroll height grow.
+                // var height = Math.max(docEle.scrollHeight, body.scrollHeight);
+
+                var height = body.scrollHeight;
+
                 if (o_height !== height){
                     _postMessage({type: 'OFFSET_HEIGHT', data: o_height = height});
                 }
