@@ -688,7 +688,31 @@ function getContentCSS() {
                     let lastedTwoCharacters = lastedCharacter + lastedChildText[1];
 
                     if(numberedSur.test(lastedTwoCharacters) || bulletSur.test(lastedCharacter)) {
+                        let firstParentDiv = lastedChild;
+
+                        // Look the first DIV in the HTML Tree,
+                        while (firstParentDiv.tagName !== 'DIV') {
+                          firstParentDiv = firstParentDiv.parentNode;
+                        }
+
+                        // If it has no siblings,
+                        // it means that it is a list at the beginning of the html,
+                        // therefore there is no need to remove the container DIV.
+                        if(firstParentDiv.previousSibling) {
+                          firstParentDiv.replaceWith(...firstParentDiv.childNodes);
+                        }
+
+                        // Remove remaining character.
                         lastedChild.textContent = '';
+
+                        // Clear any current selection
+                        const selection = window.getSelection();
+                        selection.removeAllRanges();
+
+                        // Select LI.
+                        const range = document.createRange();
+                        range.selectNodeContents(lastedChild);
+                        selection.addRange(range);
                     }
                 }
 
