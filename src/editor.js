@@ -438,7 +438,7 @@ function getContentCSS() {
                 for (const font of document.querySelectorAll("font")) {
                   const span = document.createElement("span");
                   const color = font.getAttribute("color");
-                  console.log('HEREEEE')
+
                   if (color) {
                     span.style.color = color;
                   };
